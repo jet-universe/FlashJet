@@ -8,6 +8,36 @@ on:
 permissions:
   contents: read
 jobs:
+  artifact-roundtrip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create artifact fixtures
+        run: |
+          mkdir fixtures
+          printf 'wheel fixture\n' > fixtures/wheel.txt
+          printf 'source fixture\n' > fixtures/source.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: roundtrip-wheel
+          path: fixtures/wheel.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: roundtrip-source
+          path: fixtures/source.txt
+      - uses: actions/download-artifact@v8
+        with:
+          name: roundtrip-source
+          path: by-name
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: roundtrip-*
+          path: merged
+          merge-multiple: true
+      - name: Verify named and merged downloads
+        run: |
+          cmp fixtures/source.txt by-name/source.txt
+          cmp fixtures/source.txt merged/source.txt
+          cmp fixtures/wheel.txt merged/wheel.txt
   wheels:
     strategy:
       fail-fast: false
@@ -73,7 +103,7 @@ jobs:
           python -m twine check --strict dist/*
   github-release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [verify-distributions]
+    needs: [verify-distributions, artifact-roundtrip]
     runs-on: ubuntu-latest
     permissions:
       contents: write
