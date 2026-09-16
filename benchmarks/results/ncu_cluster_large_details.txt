@@ -1,0 +1,103 @@
+[1676941] python3.11@127.0.0.1
+  _cluster_large_kernel (128, 1, 1)x(128, 1, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: GPU Speed Of Light Throughput
+    ----------------------- ----------- ------------
+    Metric Name             Metric Unit Metric Value
+    ----------------------- ----------- ------------
+    DRAM Frequency                  Ghz         5.00
+    SM Frequency                    Mhz       585.00
+    Elapsed Cycles                cycle    6,618,187
+    Memory Throughput                 %        39.36
+    DRAM Throughput                   %         0.36
+    Duration                         ms        11.31
+    L1/TEX Cache Throughput           %        57.39
+    L2 Cache Throughput               %         0.67
+    SM Active Cycles              cycle 4,694,108.83
+    Compute (SM) Throughput           %        39.36
+    ----------------------- ----------- ------------
+
+    OPT   This workload exhibits low compute throughput and memory bandwidth utilization relative to the peak           
+          performance of this device. Achieved compute throughput and/or memory bandwidth below 60.0% of peak           
+          typically indicate latency issues. Look at Scheduler Statistics and Warp State Statistics for potential       
+          reasons.                                                                                                      
+
+    Section: Launch Statistics
+    -------------------------------- --------------- ---------------
+    Metric Name                          Metric Unit    Metric Value
+    -------------------------------- --------------- ---------------
+    Block Size                                                   128
+    Function Cache Configuration                     CachePreferNone
+    Grid Size                                                    128
+    Registers Per Thread             register/thread             168
+    Shared Memory Configuration Size           Kbyte           32.77
+    Driver Shared Memory Per Block        byte/block               0
+    Dynamic Shared Memory Per Block      Kbyte/block            4.10
+    Static Shared Memory Per Block        byte/block               0
+    # SMs                                         SM              40
+    Stack Size                                                 1,024
+    Threads                                   thread          16,384
+    # TPCs                                                        20
+    Enabled TPC IDs                                              all
+    Uses Green Context                                             0
+    Waves Per SM                                                1.07
+    -------------------------------- --------------- ---------------
+
+    OPT   Est. Speedup: 50%                                                                                             
+          A wave of thread blocks is defined as the maximum number of blocks that can be executed in parallel on the    
+          target GPU. The number of blocks in a wave depends on the number of multiprocessors and the theoretical       
+          occupancy of the kernel. This kernel launch results in 1 full waves and a partial wave of 8 thread blocks.    
+          Under the assumption of a uniform execution duration of all thread blocks, this partial wave may account for  
+          up to 50.0% of the total runtime of this kernel. Try launching a grid with no partial wave. The overall       
+          impact of this tail effect also lessens with the number of full waves executed for a grid. See the Hardware   
+          Model (https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-hw-model) description for     
+          more details on launch configurations.                                                                        
+
+    Section: Occupancy
+    ------------------------------- ----------- ------------
+    Metric Name                     Metric Unit Metric Value
+    ------------------------------- ----------- ------------
+    Block Limit SM                        block           16
+    Block Limit Registers                 block            3
+    Block Limit Shared Mem                block            8
+    Block Limit Warps                     block            8
+    Theoretical Active Warps per SM        warp           12
+    Theoretical Occupancy                     %        37.50
+    Achieved Occupancy                        %        33.24
+    Achieved Active Warps Per SM           warp        10.64
+    ------------------------------- ----------- ------------
+
+    OPT   Est. Local Speedup: 62.5%                                                                                     
+          The 3.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the       
+          hardware maximum of 8. This kernel's theoretical occupancy (37.5%) is limited by the number of required       
+          registers.                                                                                                    
+
+    Section: GPU and Memory Workload Distribution
+    -------------------------- ----------- -------------
+    Metric Name                Metric Unit  Metric Value
+    -------------------------- ----------- -------------
+    Average DRAM Active Cycles       cycle       203,660
+    Total DRAM Elapsed Cycles        cycle   452,110,336
+    Average L1 Active Cycles         cycle  4,694,108.83
+    Total L1 Elapsed Cycles          cycle   264,681,344
+    Average L2 Active Cycles         cycle  1,028,624.72
+    Total L2 Elapsed Cycles          cycle   309,527,488
+    Average SM Active Cycles         cycle  4,694,108.83
+    Total SM Elapsed Cycles          cycle   264,681,344
+    Average SMSP Active Cycles       cycle  4,691,595.49
+    Total SMSP Elapsed Cycles        cycle 1,058,725,376
+    -------------------------- ----------- -------------
+
+    OPT   Est. Speedup: 20.63%                                                                                          
+          One or more SMs have a much higher number of active cycles than the average number of active cycles. Maximum  
+          instance value is 29.09% above the average, while the minimum instance value is 20.52% below the average.     
+    ----- --------------------------------------------------------------------------------------------------------------
+    OPT   Est. Speedup: 20.84%                                                                                          
+          One or more SMSPs have a much higher number of active cycles than the average number of active cycles.        
+          Maximum instance value is 29.40% above the average, while the minimum instance value is 20.46% below the      
+          average.                                                                                                      
+    ----- --------------------------------------------------------------------------------------------------------------
+    OPT   Est. Speedup: 20.63%                                                                                          
+          One or more L1 Slices have a much higher number of active cycles than the average number of active cycles.    
+          Maximum instance value is 29.09% above the average, while the minimum instance value is 20.52% below the      
+          average.                                                                                                      
+

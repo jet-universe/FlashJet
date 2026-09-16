@@ -1,0 +1,11 @@
+=== TIMING DECOMPOSITION (A100, anti-kt R=0.4, via flashjet.cluster) ===
+
+[EVENT] B=256 N=2048  full cluster()=23.202 ms  (90.63 us/unit)
+   validate sync     0.146 ms    0.6%
+   kernel+host      22.999 ms   99.1%   (GPU-split via nsys)
+   decode            0.152 ms    0.7%
+
+[JET] B=16384 N=64  full cluster()=5.604 ms  (0.34 us/unit)
+   validate sync     0.124 ms    2.2%
+   kernel+host       5.405 ms   96.5%   (GPU-split via nsys)
+   decode            0.164 ms    2.9%

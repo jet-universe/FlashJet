@@ -1,0 +1,4 @@
+include LICENSE README.md AUTHORS.md CHANGELOG.md
+include src/flashjet/_cpu_kernel.cpp
+recursive-include tests *.py
+recursive-include docs *.md *.rst *.py *.txt

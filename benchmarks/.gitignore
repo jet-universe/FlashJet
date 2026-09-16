@@ -1,0 +1,4 @@
+*.npy
+*.sqlite
+*.nsys-rep
+*.ncu-rep

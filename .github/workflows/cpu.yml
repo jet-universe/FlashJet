@@ -1,0 +1,50 @@
+name: CPU tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14]
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install CPU PyTorch on Linux
+        if: runner.os == 'Linux'
+        run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Install the exact Git commit with tensor and test extras
+        env:
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: python -m pip install "flashjet[torch,test,data] @ git+file://${GITHUB_WORKSPACE}@${RELEASE_COMMIT}"
+      - run: python -c "from flashjet import _native; assert _native.HAS_NATIVE"
+      - run: pytest -q
+  numpy-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+        env:
+          FLASHJET_NO_NATIVE: '1'
+      - name: Verify minimal install
+        run: |
+          python - <<'PYTHON'
+          import sys, numpy as np, flashjet
+          from flashjet import _native
+          assert 'torch' not in sys.modules
+          assert not _native.HAS_NATIVE
+          jets = flashjet.cluster(np.array([[1., 0., 0., 1.]])).inclusive_jets()
+          np.testing.assert_array_equal(jets, [[1., 0., 0., 1.]])
+          PYTHON

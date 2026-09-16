@@ -1,0 +1,19 @@
+.venv/
+extern/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ab_fixtures/
+*.so
+
+docs/_build/
+*.dylib
+*.pyd
+.wheel-test/
+
+# Local agent instructions and publication review notes
+/CLAUDE.md
+/REVIEW.md

@@ -1,0 +1,44 @@
+name: CUDA compatibility
+# Explicit dispatch only: never run untrusted PR code on a self-hosted GPU.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: [self-hosted, linux, x64, gpu]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: '3.10'
+            torch: '2.6.0'
+            triton: '3.2.0'
+          - python: '3.12'
+            torch: '2.7.1'
+            triton: '3.3.1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Create isolated test environment
+        run: python -m venv "$RUNNER_TEMP/flashjet-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}"
+      - name: Install and validate CUDA stack
+        env:
+          TORCH_VERSION: ${{ matrix.torch }}
+          TRITON_VERSION: ${{ matrix.triton }}
+        run: |
+          source "$RUNNER_TEMP/flashjet-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/bin/activate"
+          python -m pip install "torch==$TORCH_VERSION" "triton==$TRITON_VERSION"
+          python -m pip install '.[triton,test,data]'
+          python -m pip check
+          python - <<'PYTHON'
+          import torch, triton
+          from flashjet.triton_backend import HAS_TRITON
+          assert torch.cuda.is_available(), 'A working CUDA GPU is required'
+          assert HAS_TRITON
+          print(torch.__version__, triton.__version__, torch.version.cuda)
+          print(torch.cuda.get_device_name())
+          PYTHON
+          pytest -q

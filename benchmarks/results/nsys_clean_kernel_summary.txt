@@ -1,0 +1,18 @@
+
+ ** CUDA GPU Kernel Summary (cuda_gpu_kern_sum):
+
++----------+-----------------+-----------+--------------+--------------+------------+------------+-------------+------------------------------------------------------------------------------------------------------+
+| Time (%) | Total Time (ns) | Instances |   Avg (ns)   |   Med (ns)   |  Min (ns)  |  Max (ns)  | StdDev (ns) |                                                 Name                                                 |
++----------+-----------------+-----------+--------------+--------------+------------+------------+-------------+------------------------------------------------------------------------------------------------------+
+|     99.3 |   1,568,180,595 |        20 | 78,409,029.8 | 78,091,477.0 | 75,992,600 | 81,593,808 | 1,355,346.6 | _cluster_large_kernel                                                                                |
+|      0.5 |       8,445,651 |        20 |    422,282.5 |    421,071.0 |    404,511 |    442,752 |    10,240.8 | _decode_kernel                                                                                       |
+|      0.0 |         709,727 |        10 |     70,972.7 |     70,960.0 |     70,304 |     71,679 |       443.9 | void at::native::vectorized_elementwise_kernel<(int)4, at::native::AbsFunctor<float>, at::detail::A… |
+|      0.0 |         441,086 |        10 |     44,108.6 |     44,111.5 |     43,904 |     44,351 |       170.0 | void at::native::vectorized_elementwise_kernel<(int)4, at::native::AUnaryFunctor<float, float, bool… |
+|      0.0 |         425,023 |        10 |     42,502.3 |     42,448.0 |     42,272 |     42,784 |       157.2 | void at::native::vectorized_elementwise_kernel<(int)4, at::native::BinaryFunctor<float, float, bool… |
+|      0.0 |         389,599 |        10 |     38,959.9 |     38,960.0 |     38,400 |     39,584 |       387.3 | void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::n… |
+|      0.0 |         260,447 |        20 |     13,022.4 |     13,024.0 |     12,544 |     13,280 |       213.9 | void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIterator… |
+|      0.0 |         236,960 |        10 |     23,696.0 |     23,712.0 |     23,424 |     23,872 |       135.1 | void at::native::vectorized_elementwise_kernel<(int)4, at::native::BinaryFunctor<bool, bool, bool, … |
+|      0.0 |         117,024 |        10 |     11,702.4 |     11,648.0 |     11,456 |     11,936 |       159.7 | void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<bool, at::native::func_wrappe… |
+|      0.0 |          57,792 |        10 |      5,779.2 |      5,824.0 |      5,408 |      6,016 |       176.7 | void at::native::vectorized_elementwise_kernel<(int)4, at::native::bitwise_not_kernel_cuda(at::Tens… |
++----------+-----------------+-----------+--------------+--------------+------------+------------+-------------+------------------------------------------------------------------------------------------------------+
+

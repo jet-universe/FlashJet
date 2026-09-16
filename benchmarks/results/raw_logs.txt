@@ -1,0 +1,35 @@
+Raw console outputs (Tesla T4, anti-kt R=0.4). See RESULTS.md for the tables.
+
+=== GPU sweep: scripts/bench_gpu.py 1024 N (b_hive env) ===
+N=32  : torch 58.10 ms | triton 2.98 ms (19.5x) | triton-large 1.53 ms (38.0x) | via api 1.76 ms
+N=64  : torch 183.76 ms | triton 22.64 ms (8.1x) | triton-large 1.14 ms (161.7x) | via api 1.38 ms
+N=128 : torch 1160.50 ms | triton 68.10 ms (17.0x) | triton-large 6.61 ms (175.5x) | via api 4.89 ms
+
+=== large-N: scripts/bench_large.py (b_hive env) ===
+N=  512 B= 512: triton-large   25.56 ms/batch    49.9 us/event | via api  14.66 ms
+N= 2048 B= 256: triton-large   86.57 ms/batch   338.2 us/event | via api  87.65 ms
+N= 6000 B= 128: triton-large  418.13 ms/batch  3266.6 us/event | via api 420.91 ms
+N=16384 B=  64: triton-large 2010.63 ms/batch 31416.1 us/event | via api 2015.31 ms
+
+=== FastJet CPU baseline: scripts/fj_baseline.py (fjbench env, synthetic) ===
+fastjet 3.5.1.3 | numpy 2.4.6
+    B      N  particles   ms/batch   us/event   Mpart/s
+ 1024     32      24244     126.14      123.2     0.192
+ 1024     64      48909     245.64      239.9     0.199
+ 1024    128      98076     488.67      477.2     0.201
+  512    512     197572    1029.78     2011.3     0.192
+  256   2048     399082    2183.56     8529.5     0.183
+  128   6000     574582    3279.32    25619.7     0.175
+
+=== REAL events, apples-to-apples (16384 ttbar jets, same inputs) ===
+# flashjet (b_hive): scripts/real_extract_flashjet.py 16384
+saved 16384 real jets | constituents/jet mean=11.8 max=53 total=193400
+flashjet GPU (auto): 15.46 ms / 16384 jets  (0.94 us/jet, 12.51 Mpart/s)
+# FastJet (fjbench): scripts/real_fastjet.py
+loaded 16384 real jets | total constituents 193400
+FastJet classic  (CPU loop):   987.18 ms / 16384 jets (  60.25 us/jet, 0.196 Mpart/s)
+FastJet awkward  (CPU vect):   168.22 ms / 16384 jets (  10.27 us/jet, 1.150 Mpart/s)
+n_jets agreement flashjet vs FastJet-classic: 16384/16384 (100.00%)
+
+=== validation (fjbench): pytest test_reference_vs_fastjet.py test_kinematics_vs_fastjet.py ===
+13 passed, 1 skipped
