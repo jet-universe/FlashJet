@@ -9,25 +9,25 @@ C++ CPU kernel, PyTorch, and Triton GPU kernels.
 [Source](https://github.com/jet-universe/FlashJet) ·
 [Authors](AUTHORS.md)
 
-**Release candidate:** publication is pending review. The documentation and
-GitHub release links above are the intended destinations, not claims of a live release.
+FlashJet is available from Git, with documentation published from `main`.
+Tagged GitHub releases are separate from the current development snapshot.
+
+[![CPU tests](https://github.com/jet-universe/FlashJet/actions/workflows/cpu.yml/badge.svg?branch=main)](https://github.com/jet-universe/FlashJet/actions/workflows/cpu.yml)
+[![Distributions](https://github.com/jet-universe/FlashJet/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/jet-universe/FlashJet/actions/workflows/build.yml)
+[![Documentation](https://github.com/jet-universe/FlashJet/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/jet-universe/FlashJet/actions/workflows/docs.yml)
 
 ## Install
 
-From this checkout, before publication:
+Install from Git with PyTorch for the batch example below:
 
 ```bash
-python -m pip install '.[torch]'
+python -m pip install 'flashjet[torch] @ git+https://github.com/jet-universe/FlashJet.git'
 # Linux x86_64 with a compatible NVIDIA driver and CUDA-enabled PyTorch:
-python -m pip install '.[triton,data]'
-```
-
-After the reviewed snapshot is pushed, install directly from Git:
-
-```bash
-python -m pip install 'flashjet @ git+https://github.com/jet-universe/FlashJet.git'
 python -m pip install 'flashjet[triton,data] @ git+https://github.com/jet-universe/FlashJet.git'
 ```
+
+For NumPy-only use, omit `[torch]`. See the [installation guide](docs/installation.md)
+for optional dependencies, native builds, and wheels from CI.
 
 Append `@<full-commit-sha>` to the Git URL to pin an exact revision. PyTorch and
 Triton remain optional dependencies. There is no PyPI publication in this setup.
@@ -69,7 +69,8 @@ sphinx-build -W --keep-going -b html docs docs/_build/html
 
 CUDA tests skip when no GPU is available. Release automation builds wheels
 for CPython 3.9–3.13 on Linux x86_64 and macOS Intel/Apple Silicon, plus a source
-archive. See the release checklist for what has actually been tested locally.
+archive. Installation and artifact tests run in CI. See the release checklist for
+workflow coverage and the separate GPU validation requirements.
 
 ## License and credit
 

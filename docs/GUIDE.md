@@ -51,7 +51,7 @@ The second reason is that the answer is **differentiable**. The grouping itself 
 Install it:
 
 ```bash
-pip install -e '.[torch,test]'
+python -m pip install 'flashjet[torch] @ git+https://github.com/jet-universe/FlashJet.git'
 ```
 
 The install also compiles a small C++ file. If you have no C++ compiler, that is fine. It prints a note and uses a slower pure-Python path.

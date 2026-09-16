@@ -1,12 +1,12 @@
 # Changelog
 
-## 0.1.0 — release candidate (unpublished)
+## 0.1.0 — development snapshot
 
 First publication snapshot of FlastJetDemo. Includes the NumPy reference,
 optional C++ CPU kernel, PyTorch and Triton backends, merge-history tools,
 data batching, tests, and benchmark records.
 
-This release preparation adds documentation, package builds, release workflows,
+The Git snapshot includes live GitHub Pages documentation, package builds, release workflows,
 and dependency updates. It also makes the NumPy-only import independent of
 PyTorch and adds `FLASHJET_NO_NATIVE=1` for compiler-free source builds.
 
