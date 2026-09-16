@@ -8,6 +8,36 @@ on:
 permissions:
   contents: read
 jobs:
+  artifact-roundtrip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create artifact fixtures
+        run: |
+          mkdir fixtures
+          printf 'wheel fixture\n' > fixtures/wheel.txt
+          printf 'source fixture\n' > fixtures/source.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: roundtrip-wheel
+          path: fixtures/wheel.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: roundtrip-source
+          path: fixtures/source.txt
+      - uses: actions/download-artifact@v8
+        with:
+          name: roundtrip-source
+          path: by-name
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: roundtrip-*
+          path: merged
+          merge-multiple: true
+      - name: Verify named and merged downloads
+        run: |
+          cmp fixtures/source.txt by-name/source.txt
+          cmp fixtures/source.txt merged/source.txt
+          cmp fixtures/wheel.txt merged/wheel.txt
   wheels:
     strategy:
       fail-fast: false
@@ -17,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: pypa/cibuildwheel@v4.2.1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.os }}
           path: wheelhouse/*.whl
@@ -38,14 +68,42 @@ jobs:
           python -m pip install dist/*.tar.gz
           cd "$RUNNER_TEMP"
           python "$GITHUB_WORKSPACE/tests/wheel_smoke.py"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: source-distribution
           path: dist/*.tar.gz
           if-no-files-found: error
+  verify-distributions:
+    needs: [wheels, sdist]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: wheels-*
+          path: dist
+          merge-multiple: true
+      - uses: actions/download-artifact@v8
+        with:
+          name: source-distribution
+          path: dist
+      - run: python -m pip install twine
+      - name: Check the downloaded release artifacts
+        run: |
+          python - <<'PYTHON'
+          from pathlib import Path
+          wheels = list(Path('dist').glob('*.whl'))
+          assert len(wheels) == 15, f'Expected 15 wheels, found {len(wheels)}'
+          for platform in ('manylinux', 'macosx'):
+              assert any(platform in p.name for p in wheels), platform
+          assert len(list(Path('dist').glob('*.tar.gz'))) == 1
+          PYTHON
+          python -m twine check --strict dist/*
   github-release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [wheels, sdist]
+    needs: [verify-distributions, artifact-roundtrip]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -64,12 +122,12 @@ jobs:
               version = tomllib.load(f)['project']['version']
           assert os.environ['RELEASE_TAG'] == 'v' + version
           PYTHON
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: wheels-*
           path: dist
           merge-multiple: true
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: source-distribution
           path: dist
