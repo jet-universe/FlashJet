@@ -23,8 +23,8 @@ jobs:
         with:
           name: documentation-preview
           path: docs/_build/html
-      - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      # Package on PRs too so action upgrades are exercised before deployment.
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs/_build/html
   deploy:
