@@ -56,7 +56,17 @@ For one event, `flashjet.cluster(numpy_array)` returns a `ClusterSequenceRef`.
 Call `inclusive_jets()` for momenta or `jet_constituents()` for particle indices.
 
 Read the [quickstart](docs/quickstart.md), [plain-English guide](docs/GUIDE.md),
-[backend limits](docs/backends.md), and [release checklist](docs/releasing.md).
+[backend limits](docs/backends.md), [serving guide](docs/serving.md), and
+[release checklist](docs/releasing.md).
+
+To give a GPU to processes that cannot use one directly, FlashJet can run behind
+a Triton inference server, which clusters the requests that arrive together in
+one kernel launch:
+
+```bash
+python -m flashjet.serving.model_repository /path/to/models
+tritonserver --model-repository=/path/to/models
+```
 
 ## Develop
 
