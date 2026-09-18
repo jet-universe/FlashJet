@@ -1,11 +1,13 @@
 """flashjet: GPU (Triton/CUDA) jet reclustering for training loops."""
 
 from .api import ALGORITHMS, ClusterOutput, cluster
+from .history_np import jet_idx_from_history_np
 from .reference import ClusterSequenceRef, cluster_event
 
 __version__ = "0.1.0"
 __all__ = [
     "cluster",
+    "jet_idx_from_history_np",
     "ClusterOutput",
     "ClusterSequenceRef",
     "cluster_event",
